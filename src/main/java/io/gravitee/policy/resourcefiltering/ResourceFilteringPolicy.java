@@ -58,7 +58,7 @@ public class ResourceFilteringPolicy {
 
         if (configuration.getWhitelist() != null && !configuration.getWhitelist().isEmpty()) {
             for(Resource resource : configuration.getWhitelist()) {
-                if (pathMatcher.match(resource.getPattern(), path)) {
+                if (resource.getPattern() != null && pathMatcher.match(resource.getPattern(), path)) {
                     if (resource.getMethods() == null || resource.getMethods().contains(request.method())) {
                         policyChain.doNext(request, response);
                         return;
@@ -74,7 +74,7 @@ public class ResourceFilteringPolicy {
 
         if (configuration.getBlacklist() != null && ! configuration.getBlacklist().isEmpty()) {
             for(Resource resource : configuration.getBlacklist()) {
-                if (pathMatcher.match(resource.getPattern(), path)) {
+                if (resource.getPattern() != null && pathMatcher.match(resource.getPattern(), path)) {
                     if (resource.getMethods() == null || resource.getMethods().contains(request.method())) {
                         policyChain.failWith(PolicyResult.failure(
                                 HttpStatusCode.FORBIDDEN_403,
