@@ -7,24 +7,92 @@ endif::[]
 
 == Phase
 
-[cols="^2,^2,^2",options="header"]
+[cols="2*", options="header"]
 |===
-|onRequest|onResponse|onRequestContent|onResponseContent
+^|onRequest
+^|onResponse
 
-|X
-|
-|
-|
+^.^| X
+^.^|
+
 |===
 
 == Description
 
-== Usage
+The resource filtering is designed to filter rest resources. By applying this filter you can restrict or allow access to
+ a specific resource determined by a path and a method (or an array of methods).
+
+This policy is mainly used in a <<plan-configuration, plan configuration>> to allow access to
+subscribers to specific resources only.
+
+A typical usage would be to allow access to all paths (/**) but in read-only mode (GET method).
+
+WARNING: You can't apply both resource whitelist and resource blacklist in the same time. Whitelisting takes precedence over blacklisting.
+
 
 == Configuration
+
+|===
+|Property |Required |Description |Type| Default
+
+.^|whitelist
+^.^|-
+|List of allowed resources.
+^.^|array of <<gravitee-policy-resource-filtering-resource, `resources`>>
+^.^|-
+
+.^|blacklist
+^.^|-
+|List of restricted resources.
+^.^|array of <<gravitee-policy-resource-filtering-resource, `resources`>>
+^.^|-
+
+|===
+
+[[gravitee-policy-resource-filtering-resource]]
+A `Resource` is defined as follow:
+|===
+|Property |Required |Description |Type| Default
+
+.^|pattern
+^.^|X
+|An <<gravitee-policy-resource-filtering-ant, Ant-style path patterns>> (http://ant.apache.org/[Apache Ant]).
+^.^|string
+^.^|-
+
+.^|methods
+^.^|-
+|List of HTTP methods for which filter is applied.
+^.^|array of HTTP methods
+^.^|All HTTP methods
+
+|===
+
 [source, json]
 .Configuration example
-"resource-filtering": {
+"resource-filtering" : {
+    "whitelist":[
+        {
+            "pattern":"/**",
+            "methods": ["GET"]
+        }
+    ]
 }
 
+[[gravitee-policy-resource-filtering-ant]]
+=== Ant style path pattern
+The mapping matches URLs using the following rules:
 
+* `?` matches one character
+* `*` matches zero or more characters
+* `**` matches zero or more directories in a path
+
+== Http Status Code
+
+|===
+|Code |Message
+
+.^| ```403```
+| Access to the resource is forbidden according to resource-filtering rules.
+
+|===
