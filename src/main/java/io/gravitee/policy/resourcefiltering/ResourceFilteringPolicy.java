@@ -18,9 +18,13 @@ package io.gravitee.policy.resourcefiltering;
 import io.gravitee.common.http.HttpStatusCode;
 import io.gravitee.gateway.api.Request;
 import io.gravitee.gateway.api.Response;
+import io.gravitee.policy.api.ChainScope;
 import io.gravitee.policy.api.PolicyChain;
 import io.gravitee.policy.api.PolicyResult;
+import io.gravitee.policy.api.annotations.Category;
 import io.gravitee.policy.api.annotations.OnRequest;
+import io.gravitee.policy.api.annotations.Policy;
+import io.gravitee.policy.api.annotations.Scope;
 import io.gravitee.policy.resourcefiltering.configuration.Resource;
 import io.gravitee.policy.resourcefiltering.configuration.ResourceFilteringPolicyConfiguration;
 import org.springframework.util.AntPathMatcher;
@@ -29,6 +33,10 @@ import org.springframework.util.AntPathMatcher;
  * @author David BRASSELY (david.brassely at graviteesource.com)
  * @author GraviteeSource Team
  */
+@Policy(
+        category = @Category(io.gravitee.policy.api.Category.SECURITY),
+        scope = @Scope({ChainScope.API, ChainScope.PLAN})
+)
 public class ResourceFilteringPolicy {
 
     /**
